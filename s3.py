@@ -365,6 +365,13 @@ Built using Python, Streamlit, Pandas and Plotly.
     font-size:30px;
     font-weight:bold;
 }
+.metric-card,
+.highlight-card{
+    width:100%;
+    min-height:180px;
+    box-sizing:border-box;
+}
+
 
 .title-line{
     width:85%;
@@ -936,113 +943,74 @@ elif menu == "Data Cleaning":
         "covid_19_clean_complete.csv"
     )
     st.markdown("""
-    <style>
+<style>
 
-    /* Metric Cards */
-
-    .info-card{
-
+.info-card{
     background:white;
-    padding:18px;
-    border-radius:18px;
-    text-align:center;
-
     border:2px solid #E4AFB0;
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+    box-shadow:0px 5px 15px rgba(154,119,135,0.25);
 
-    box-shadow:
-    0px 5px 15px rgba(154,119,135,0.3);
+    min-height:170px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
 
     transition:0.3s;
+    margin-bottom:15px;
+    box-sizing:border-box;
+}
 
-    }
+.info-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0px 10px 20px rgba(154,119,135,0.35);
+}
 
+.info-card h4{
+    margin:0;
+    font-size:20px;
+    font-weight:bold;
+}
 
-    .info-card:hover{
+.info-card h2{
+    margin:10px 0;
+    font-size:30px;
+    font-weight:bold;
+}
 
-    transform:translateY(-8px);
-
-    box-shadow:
-    0px 12px 25px rgba(154,119,135,0.5);
-
-    }
-
-
-
-    /* Lines */
-
-    .blue-line{
-
-    height:5px;
+.blue-line{
+    width:100%;
+    height:6px;
     background:#2196F3;
     border-radius:10px;
+}
 
-    }
-
-
-    .purple-line{
-
-    height:5px;
+.purple-line{
+    width:100%;
+    height:6px;
     background:#9C27B0;
     border-radius:10px;
+}
 
-    }
-
-
-    .orange-line{
-
-    height:5px;
+.orange-line{
+    width:100%;
+    height:6px;
     background:#FF9800;
     border-radius:10px;
+}
 
-    }
-
-
-    .green-line{
-
-    height:5px;
+.green-line{
+    width:100%;
+    height:6px;
     background:#4CAF50;
     border-radius:10px;
+}
 
-    }
-
-
-
-    /* Cleaning Box */
-
-    .clean-box{
-
-    background:#FED7BF;
-
-    padding:20px;
-
-    border-radius:18px;
-
-    border-left:8px solid #9A7787;
-
-    font-size:16px;
-
-    }
-
-
-    /* Dataframe */
-
-    div[data-testid="stDataFrame"]{
-
-    border:3px solid #9A7787;
-
-    border-radius:15px;
-
-    box-shadow:
-    0px 5px 15px rgba(154,119,135,0.3);
-
-    }
-
-
-    </style>
-    """,unsafe_allow_html=True)
-
-
-
+</style>
+""", unsafe_allow_html=True)
 # ---------- ORIGINAL DATASET ----------
 
 
