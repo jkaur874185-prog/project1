@@ -329,113 +329,73 @@ Built using Python, Streamlit, Pandas and Plotly.
 
     st.divider()
 
-# ================= COUNTRY =================
-  
+# ==================================================
+# COUNTRY WISE OVERVIEW
+# ==================================================
+    st.markdown("""
+<style>
 
+.metric-card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    border:2px solid #E4AFB0;
+    box-shadow:0 5px 15px rgba(154,119,135,0.25);
+    height:185px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    transition:0.3s;
+}
 
+.metric-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 10px 22px rgba(154,119,135,0.35);
+}
 
-    c1,c2,c3,c4 = st.columns(4)
+.metric-card h4{
+    margin:0;
+    font-size:20px;
+    font-weight:bold;
+}
 
-    with c1:
-        # ================= KPI CARD STYLE =================
+.metric-card h2{
+    margin:0;
+    font-size:30px;
+    font-weight:bold;
+}
 
-     st.markdown("""
-    <style>
+.title-line{
+    width:85%;
+    height:2px;
+    background:#E4AFB0;
+    border-radius:10px;
+    margin:8px 0;
+}
 
-    .metric-card{
+.blue-line,
+.purple-line,
+.orange-line,
+.green-line{
+    width:100%;
+    height:6px;
+    border-radius:10px;
+}
 
-        background:white;
+.blue-line{background:#1E88E5;}
+.purple-line{background:#9C27B0;}
+.orange-line{background:#FF9800;}
+.green-line{background:#4CAF50;}
 
-        padding:18px;
-
-        border-radius:18px;
-
-        text-align:center;
-
-        border:2px solid #E4AFB0;
-
-        box-shadow:
-        0px 5px 15px rgba(154,119,135,0.3);
-
-        transition:0.3s ease-in-out;
-
-    }
-
-
-    .metric-card:hover{
-
-        transform:translateY(-8px);
-
-        box-shadow:
-        0px 12px 25px rgba(154,119,135,0.5);
-
-    }
-
-
-
-    .blue-line{
-
-        height:5px;
-
-        background:#1E88E5;
-
-        border-radius:10px;
-
-    }
-
-
-    .purple-line{
-
-        height:5px;
-
-        background:#9C27B0;
-
-        border-radius:10px;
-
-    }
-
-
-    .orange-line{
-
-        height:5px;
-
-        background:#FF9800;
-
-        border-radius:10px;
-
-    }
-
-
-    .green-line{
-
-        height:5px;
-
-        background:#4CAF50;
-
-        border-radius:10px;
-
-    }
-
-
-    </style>
-    """,unsafe_allow_html=True)
-
-
-
-    # ==================================================
-    # COUNTRY WISE OVERVIEW
-    # ==================================================
-
+</style>
+""", unsafe_allow_html=True)
 
     st.subheader("🌍 Country-Wise Overview")
 
 
     c1,c2,c3,c4 = st.columns(4)
-
-
-
     with c1:
-
         st.markdown(f"""
 
         <div class="metric-card">
@@ -519,10 +479,10 @@ Built using Python, Streamlit, Pandas and Plotly.
 
 
 
-    st.divider()
+    st.divider()                                                                                                                                                        
 
 
-
+      
 # ==================================================
 # STATE WISE OVERVIEW
 # ==================================================
@@ -533,21 +493,21 @@ Built using Python, Streamlit, Pandas and Plotly.
     c1,c2,c3,c4 = st.columns(4)
     with c1:
 
-        st.markdown(f"""
+            st.markdown(f"""
 
-        <div class="metric-card">
+            <div class="metric-card">
 
-        <h4>🦠 Total Cases</h4>
+            <h4>🦠 Total Cases</h4>
 
-        <h2 style="color:#1E88E5;">
-        {df4['Total Cases'].sum():,}
-        </h2>
+            <h2 style="color:#1E88E5;">
+            {df4['Total Cases'].sum():,}
+            </h2>
 
-        <div class="blue-line"></div>
+            <div class="blue-line"></div>
 
-        </div>
+            </div>
 
-        """,unsafe_allow_html=True)
+            """,unsafe_allow_html=True)
 
 
 
@@ -555,21 +515,21 @@ Built using Python, Streamlit, Pandas and Plotly.
 
     with c2:
 
-        st.markdown(f"""
+            st.markdown(f"""
 
-        <div class="metric-card">
+            <div class="metric-card">
 
-        <h4>💀 Deaths</h4>
+            <h4>💀 Deaths</h4>
 
-        <h2 style="color:#9C27B0;">
-        {df4['Deaths'].sum():,}
-        </h2>
+            <h2 style="color:#9C27B0;">
+            {df4['Deaths'].sum():,}
+            </h2>
 
-        <div class="purple-line"></div>
+            <div class="purple-line"></div>
 
-        </div>
+            </div>
 
-        """,unsafe_allow_html=True)
+            """,unsafe_allow_html=True)
 
 
 
@@ -577,21 +537,21 @@ Built using Python, Streamlit, Pandas and Plotly.
 
     with c3:
 
-        st.markdown(f"""
+            st.markdown(f"""
 
-        <div class="metric-card">
+            <div class="metric-card">
 
-        <h4>🟠 Active Cases</h4>
+            <h4>🟠 Active Cases</h4>
 
-        <h2 style="color:#FF9800;">
-        {df4['Active'].sum():,}
-        </h2>
+            <h2 style="color:#FF9800;">
+            {df4['Active'].sum():,}
+            </h2>
 
-        <div class="orange-line"></div>
+            <div class="orange-line"></div>
 
-        </div>
+            </div>
 
-        """,unsafe_allow_html=True)
+            """,unsafe_allow_html=True)
 
 
 
@@ -599,21 +559,21 @@ Built using Python, Streamlit, Pandas and Plotly.
 
     with c4:
 
-        st.markdown(f"""
+            st.markdown(f"""
 
-        <div class="metric-card">
+            <div class="metric-card">
 
-        <h4>💚 Discharged</h4>
+            <h4>💚 Discharged</h4>
 
-        <h2 style="color:#4CAF50;">
-        {df4['Discharged'].sum():,}
-        </h2>
+            <h2 style="color:#4CAF50;">
+            {df4['Discharged'].sum():,}
+            </h2>
 
-        <div class="green-line"></div>
+            <div class="green-line"></div>
 
-        </div>
+            </div>
 
-        """,unsafe_allow_html=True)
+            """,unsafe_allow_html=True)
     st.subheader("📌 About Project")
 
     st.info("""
@@ -1121,7 +1081,7 @@ elif menu == "Data Cleaning":
 
         <div class="info-card">
 
-        <h4>⚠️ Missing Values</h4>
+        <h4>⚠️ Missing values</h4>
 
         <h2 style="color:#FF9800;">
         {clean_data.isnull().sum().sum():,}
