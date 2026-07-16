@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 from streamlit_option_menu import option_menu
 import plotly.express as px
+import json
 # ================= PAGE CONFIG =================
 st.set_page_config(
     page_title="COVID-19 Dashboard",
@@ -279,17 +280,35 @@ st.markdown("""
 
 with st.sidebar:
     st.title("🦠 COVID-19 Dashboard")
-    menu = option_menu("Main Menu",["Overview","Dataset Summary","Data Cleaning","Covid Analysis","World Map","Time Analysis","Insights"],
+    menu = option_menu("Main Menu",["Overview","Dataset Summary","Data Cleaning","Covid Analysis","Worldwide Analysis","Time Analysis","Insights"],
         icons=["🏡","📂","🔨","📊","🌎","⏰","💡"],
         default_index=0)
 
 # ================= OVERVIEW =================
-
+    
 
 if menu == "Overview":
+    st.markdown("""
+    <style>
+    .dashboard-title {
+        background-color: #E4AFB0;
+        color: black;
+        padding: 15px;
+        text-align: center;
+        border-radius: 12px;
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    }
+    </style>
+
+    <div class="dashboard-title">
+        🌍 Global COVID-19 Analysis Dashboard
+    </div>
+    """, unsafe_allow_html=True)
 
 
-    st.title("🌍 Global COVID-19 Analysis Dashboard")
 
 
     
@@ -789,70 +808,73 @@ Technologies:
 
 
     # ================= HIGHLIGHTS =================
-
-
     st.subheader("📈 Dashboard Highlights")
 
+    h1, h2 = st.columns(2)
 
-    h1,h2 = st.columns(2)
+    top = df.loc[df["Confirmed"].idxmax(), "Country/Region"]
 
+    recovery = (df["Recovered"].sum() / df["Confirmed"].sum()) * 100
+    death = (df["Deaths"].sum() / df["Confirmed"].sum()) * 100
 
+    # CSS
+    st.markdown("""
+    <style>
+    .metric-card{
+        background-color:#FFFFFF;
+        padding:20px;
+        border-radius:15px;
+        box-shadow:0 4px 10px rgba(0,0,0,0.15);
+        text-align:center;
+        margin-bottom:15px;
+        border-left:6px solid #E4AFB0;
+    }
+
+    .metric-title{
+        font-size:18px;
+        color:#444;
+        font-weight:bold;
+    }
+
+    .metric-value{
+        font-size:30px;
+        color:#C0392B;
+        font-weight:bold;
+        margin-top:10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
     with h1:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">🌍 Countries Covered</div>
+            <div class="metric-value">{df['Country/Region'].nunique()}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-
-        st.write(
-            "🌍 Countries Covered:",
-            df["Country/Region"].nunique()
-        )
-
-
-        top = df.loc[
-            df["Confirmed"].idxmax(),
-            "Country/Region"
-        ]
-
-
-        st.write(
-            "🏆 Most Affected Country:",
-            top
-        )
-
-
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">🏆 Most Affected Country</div>
+            <div class="metric-value">{top}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     with h2:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">💚 Recovery Rate</div>
+            <div class="metric-value">{recovery:.2f}%</div>
+        </div>
+        """, unsafe_allow_html=True)
 
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">❤️ Death Rate</div>
+            <div class="metric-value">{death:.2f}%</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        recovery = (
-
-            df["Recovered"].sum()
-            /
-            df["Confirmed"].sum()
-
-        )*100
-
-
-
-        death = (
-
-            df["Deaths"].sum()
-            /
-            df["Confirmed"].sum()
-
-        )*100
-
-
-
-        st.write(
-            "💚 Recovery Rate:",
-            f"{recovery:.2f}%"
-        )
-
-
-        st.write(
-            "❤️ Death Rate:",
-            f"{death:.2f}%"
-        )
     
     # ================= DATASET SUMMARY =================
 
@@ -1310,7 +1332,6 @@ elif menu == "Data Cleaning":
     # ================= COVID ANALYSIS =================
 
 
-# ================= COVID ANALYSIS =================
 
 elif menu == "Covid Analysis":
 
@@ -1829,8 +1850,8 @@ elif menu == "Covid Analysis":
 
 
 
-# ================= WORLD MAP =================
-elif menu == "World Map":
+# ================= Worldwide Analysis =================
+elif menu == "Worldwide Analysis":
 
     st.title("🌍 COVID-19 World Map")
 
@@ -1848,7 +1869,6 @@ elif menu == "World Map":
     )
 
 
-    # ---------------- WORLD MAP ----------------
 
     st.subheader(
         f"🌎 Worldwide COVID-19 {metric} Cases"
@@ -1902,59 +1922,31 @@ elif menu == "World Map":
         fig,
         use_container_width=True
     )
-    # st.subheader("🇮🇳 India State-wise COVID Cases")
+    import json
 
+    with open("india_state.geojson", "r", encoding="utf-8") as f:
+        india_states = json.load(f)
 
-    # india_geojson = "https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson"
+    fig = px.choropleth(
+        data_frame=df4,                 # ✅ DataFrame
+        geojson=india_states,
+        locations="States",             # Ya "State/UTs" agar wahi column hai
+        featureidkey="properties.NAME_1",
+        color="Total Cases",
+        hover_name="States",            # Ya "State/UTs"
+        hover_data=["Active", "Discharged", "Deaths"],
+        color_continuous_scale="Reds"
+    )
 
+    fig.update_geos(
+        fitbounds="locations",
+        visible=False
+    )
 
-    # fig = px.choropleth(
-    #     df4,
-    #     geojson=india_geojson,
-    #     locations="States",
-    #     featureidkey="properties.ST_NM",
-    #     color="Total Cases",
-    #     hover_name="States",
-    #     hover_data=[
-    #         "Total Cases",
-    #         "Active",
-    #         "Discharged",
-    #         "Deaths"
-    #     ],
-    #     color_continuous_scale=[
-    #         "#FED7BF",
-    #         "#E4AFB0",
-    #         "#9A7787"
-    #     ],
-    #     title="India COVID-19 State Map"
-    # )
-
-
-    # fig.update_geos(
-    #     fitbounds="locations",
-    #     visible=False
-    # )
-
-
-    # fig.update_layout(
-    #     height=600,
-    #     margin=dict(
-    #         l=0,
-    #         r=0,
-    #         t=50,
-    #         b=0
-    #     )
-    # )
-
-
-    # st.plotly_chart(
-    #     (fig),
-    #     use_container_width=True
-    # )
+    st.plotly_chart(fig, use_container_width=True)
  # ================= TIME ANALYSIS =================
 
 elif menu == "Time Analysis":
-
     st.title("⏳ COVID-19 Time Analysis")
 
     # ================= COPY DATASET =================
@@ -2082,7 +2074,6 @@ elif menu == "Time Analysis":
 
     st.dataframe(filtered_df, use_container_width=True)
 
-    st.title("⏳ COVID-19 Time Analysis")
 
 
     # Copy dataset
@@ -2097,308 +2088,60 @@ elif menu == "Time Analysis":
     )
 
 
-    # ================= DATE SLIDER =================
     
-    st.subheader("📅 Select Date Range")
-
-
-    min_date = time_df["Date"].min()
-    max_date = time_df["Date"].max()
-
-
-    selected_date = st.slider(
-
-        "Choose Date",
-
-        min_value=min_date.to_pydatetime(),
-
-        max_value=max_date.to_pydatetime(),
-
-        value=(
-
-            min_date.to_pydatetime(),
-
-            max_date.to_pydatetime()
-
-        )
-
-    )
-
-
-    filtered_df = time_df[
-
-        (time_df["Date"] >= selected_date[0])
-
-        &
-
-        (time_df["Date"] <= selected_date[1])
-
-    ]
-
-
-
-    st.divider()
-
-
-
-    # ================= CHART FUNCTION =================
-
-
-    def time_chart_style(fig):
-
-        fig.update_layout(
-
-            title_font=dict(
-
-                size=22,
-
-                family="Arial Black"
-
-            ),
-
-            xaxis_title_font=dict(
-
-                size=16,
-
-                family="Arial Black"
-
-            ),
-
-            yaxis_title_font=dict(
-
-                size=16,
-
-                family="Arial Black"
-
-            ),
-
-            height=550
-
-        )
-
-
-        st.plotly_chart(
-
-            fig,
-
-            use_container_width=True
-
-        )
-
-
-
-    # ================= LINE CHART =================
-
-
-    st.subheader(
-        "📈 Daily COVID Cases Trend"
-    )
-
-
-    fig1 = px.line(
-
-        filtered_df,
-
-        x="Date",
-
-        y=[
-
-            "New cases",
-
-            "New deaths",
-
-            "New Recovered"
-
-        ],
-
-        title="Daily New Cases, Deaths & Recovery",
-
-        markers=True
-
-    )
-
-
-    time_chart_style(fig1)
-
-
-
-    st.divider()
-
-
-
-    # ================= AREA CHART =================
-
-
-    st.subheader(
-        "🌊 Confirmed vs Active Cases"
-    )
-
-
-    fig2 = px.area(
-
-        filtered_df,
-
-        x="Date",
-
-        y=[
-
-            "Confirmed",
-
-            "Active"
-
-        ],
-
-        title="Confirmed and Active Cases Over Time"
-
-    )
-
-
-    time_chart_style(fig2)
-
-
-
-    st.divider()
-
-
-
-    # ================= BAR CHART =================
-
-
-    st.subheader(
-        "📊 Daily New Cases"
-    )
-
-
-    fig3 = px.bar(
-
-        filtered_df,
-
-        x="Date",
-
-        y="New cases",
-
-        title="Daily New COVID Cases"
-
-    )
-
-
-    time_chart_style(fig3)
-
-
-
-    st.divider()
-
-
-
-    # ================= DEATH VS RECOVERY =================
-
-
-    st.subheader(
-        "💀 Deaths vs 💚 Recovery"
-    )
-
-
-    fig4 = px.line(
-
-        filtered_df,
-
-        x="Date",
-
-        y=[
-
-            "New deaths",
-
-            "New Recovered"
-
-        ],
-
-        title="Daily Deaths and Recovery Comparison",
-
-        markers=True
-
-    )
-
-
-    time_chart_style(fig4)
-
-
-
-    st.divider()
-
-
-
-    # ================= DATA PREVIEW =================
-
-
-    st.subheader(
-        "📋 Time Analysis Data"
-    )
-
-
-    st.dataframe(
-
-        filtered_df,
-
-        use_container_width=True
-
-    )  
     #=========INsights===================== 
 elif menu == "Insights":
-
     st.title("💡 COVID-19 Insights")
 
 
     # ================= OVERALL SUMMARY =================
 
     st.markdown("""
-<style>
+    <style>
 
-/* Metric Card Design */
-div[data-testid="stMetric"] {
-    background-color: #FED7BF;
-    border: 3px solid #E4AFB0;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0px 5px 15px rgba(154,119,135,0.25);
-    transition: 0.3s;
-}
+    /* Metric Card Design */
+    div[data-testid="stMetric"] {
+        background-color: #FED7BF;
+        border: 3px solid #E4AFB0;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0px 5px 15px rgba(154,119,135,0.25);
+        transition: 0.3s;
+    }
 
-/* Hover Animation */
-div[data-testid="stMetric"]:hover {
-    transform: translateY(-8px);
-    box-shadow: 0px 10px 25px rgba(154,119,135,0.45);
-}
-
-
-/* Metric Label */
-div[data-testid="stMetricLabel"] {
-    color: #9A7787;
-    font-size: 18px;
-    font-weight: bold;
-}
+    /* Hover Animation */
+    div[data-testid="stMetric"]:hover {
+        transform: translateY(-8px);
+        box-shadow: 0px 10px 25px rgba(154,119,135,0.45);
+    }
 
 
-/* Metric Value */
-div[data-testid="stMetricValue"] {
-    color: #9A7787;
-    font-size: 32px;
-    font-weight: 800;
-}
+    /* Metric Label */
+    div[data-testid="stMetricLabel"] {
+        color: #9A7787;
+        font-size: 18px;
+        font-weight: bold;
+    }
 
 
-/* Divider */
-hr {
-    border: 1px solid #E4AFB0;
-}
+    /* Metric Value */
+    div[data-testid="stMetricValue"] {
+        color: #9A7787;
+        font-size: 32px;
+        font-weight: 800;
+    }
 
-</style>
-""", unsafe_allow_html=True)
-    
-    
+
+    /* Divider */
+    hr {
+        border: 1px solid #E4AFBO;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
     
     
     st.subheader("📌 Overall COVID-19 Summary")
-
 
     total_confirmed = df["Confirmed"].sum()
     total_active = df["Active"].sum()
@@ -2407,7 +2150,6 @@ hr {
 
 
     col1, col2, col3, col4 = st.columns(4)
-
 
     with col1:
         st.metric(
