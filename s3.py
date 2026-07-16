@@ -767,75 +767,91 @@ Technologies:
 
 
 
-    # ================= HIGHLIGHTS =================
+   
+
+# ================= Dashboard Highlights CSS =================
     st.subheader("📈 Dashboard Highlights")
 
-    h1, h2 = st.columns(2)
+    top_country = df.loc[df["Confirmed"].idxmax(), "Country/Region"]
+    recovery_rate = (df["Recovered"].sum() / df["Confirmed"].sum()) * 100
+    death_rate = (df["Deaths"].sum() / df["Confirmed"].sum()) * 100
 
-    top = df.loc[df["Confirmed"].idxmax(), "Country/Region"]
-
-    recovery = (df["Recovered"].sum() / df["Confirmed"].sum()) * 100
-    death = (df["Deaths"].sum() / df["Confirmed"].sum()) * 100
-
-    # CSS
+    # ================= CSS =================
     st.markdown("""
     <style>
-    .metric-card{
-        background-color:#FFFFFF;
-        padding:20px;
-        border-radius:15px;
-        box-shadow:0 4px 10px rgba(0,0,0,0.15);
+
+    .highlight-card{
+        background:white;
+        border:2px solid #E4AFB0;
+        border-radius:18px;
+        padding:18px;
         text-align:center;
+        box-shadow:0px 5px 15px rgba(154,119,135,0.25);
         margin-bottom:15px;
-        border-left:6px solid #E4AFB0;
+        min-height:110px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        transition:0.3s;
     }
 
-    .metric-title{
+    .highlight-card:hover{
+        transform:translateY(-5px);
+        box-shadow:0px 10px 20px rgba(154,119,135,0.35);
+    }
+
+    .highlight-title{
         font-size:18px;
-        color:#444;
         font-weight:bold;
+        color:#555;
+        margin-bottom:10px;
     }
 
-    .metric-value{
-        font-size:30px;
-        color:#C0392B;
+    .highlight-value{
+        font-size:26px;
         font-weight:bold;
-        margin-top:10px;
+        color:#9A7787;
     }
+
     </style>
     """, unsafe_allow_html=True)
 
+    h1, h2 = st.columns(2)
+
     with h1:
+
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">🌍 Countries Covered</div>
-            <div class="metric-value">{df['Country/Region'].nunique()}</div>
+        <div class="highlight-card">
+            <div class="highlight-title">🌍 Countries Covered</div>
+            <div class="highlight-value">{df['Country/Region'].nunique()}</div>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">🏆 Most Affected Country</div>
-            <div class="metric-value">{top}</div>
+        <div class="highlight-card">
+            <div class="highlight-title">🏆 Most Affected Country</div>
+            <div class="highlight-value">{top_country}</div>
         </div>
         """, unsafe_allow_html=True)
 
     with h2:
+
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">💚 Recovery Rate</div>
-            <div class="metric-value">{recovery:.2f}%</div>
+        <div class="highlight-card">
+            <div class="highlight-title">💚 Recovery Rate</div>
+            <div class="highlight-value">{recovery_rate:.2f}%</div>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">❤️ Death Rate</div>
-            <div class="metric-value">{death:.2f}%</div>
+        <div class="highlight-card">
+            <div class="highlight-title">❤️ Death Rate</div>
+            <div class="highlight-value">{death_rate:.2f}%</div>
         </div>
         """, unsafe_allow_html=True)
 
-    
+    st.divider()
+   
     # ================= DATASET SUMMARY =================
 
 
